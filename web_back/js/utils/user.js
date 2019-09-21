@@ -5,22 +5,29 @@ var user = {
    * @param {*} password 密码
    * @param {*} callBack 回调函数
    */
-  login: function(userName, password, callBack) {
+  
+  /**
+   * 
+   * @param {*} userName 用户名 
+   * @param {*} password 密码
+   * @param {*} callBack 回调函数
+   */
+  login: function (userName, password, callBack) {
     // alert(userName + password);
-    $.post(URLIST.user_login, { user_name: userName, password: password }, function(res) {
+    $.post(URLIST.user_login, { user_name: userName, password: password }, function (res) {
       // res 是本次请求，从服务器回来的数据
       callBack(res);
     });
   },
 
-  logout: function(callBack) {
-    $.post(URLIST.user_logout, function(res) {
+  logout: function (callBack) {
+    $.post(URLIST.user_logout, function (res) {
       callBack(res);
     });
   },
 
-  getInfo: function(callBack) {
-    $.get(URLIST.user_info, function(res) {
+  getInfo: function (callBack) {
+    $.get(URLIST.user_info, function (res) {
       callBack(res);
     });
   }

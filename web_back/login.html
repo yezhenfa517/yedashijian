@@ -53,7 +53,10 @@
   </div>
   <script src="js/lib/jquery-1.12.4.min.js"></script>
   <script src="js/bootstrap/js/bootstrap.min.js"></script>
+  <script src="js/utils/user.js"></script>
+  <script src="js/utils/config.js"></script>
   <script>
+
     $("#btnLogin").click(function () {
       var userName = $("#userName").val();
       var password = $("#password").val();
@@ -64,15 +67,26 @@
         $('#myModal').modal('show')
         return;
       } else {
-        $.post('http://localhost:8000/admin/login', { user_name: userName, password: password }, function (res) {
+        user.login(userName, password, function (res) {
           console.log(res)
           if (res.code == 200) {
-            window.location.href='./index.html';
+            window.location.href = './index.html';
           } else {
             $('#myModal').modal('show')
             $("#pResult").html(res.msg);
           }
         })
+//...........................................................................................................
+        // 优化前
+        // $.post('http://localhost:8000/admin/login', { user_name: userName, password: password }, function (res) {
+          // console.log(res)
+          // if (res.code == 200) {
+          //   window.location.href = './index.html';
+          // } else {
+          //   $('#myModal').modal('show')
+          //   $("#pResult").html(res.msg);
+          // }
+        // })
       }
     })
   </script>
