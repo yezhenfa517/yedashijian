@@ -9,12 +9,29 @@
   <link rel="stylesheet" type="text/css" href="css/reset.css" />
   <link rel="stylesheet" type="text/css" href="css/iconfont.css" />
   <link rel="stylesheet" type="text/css" href="css/main.css" />
-  <link rel="stylesheet" href="./js/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css">
 </head>
 
 <body>
+  <!-- 模态框 -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">错误提示</h4>
+        </div>
+        <div class="modal-body">
+          <p id="pResult"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 
-  <!-- /.modal -->
   <div class="main_wrap">
     <div class="header">
       <a href="#" class="logo"><img src="images/logo.png" alt="" /></a>
@@ -32,23 +49,28 @@
         <button id="btnLogin" type="button" class="input_sub">登 录</button>
       </form>
     </div>
+
   </div>
   <script src="js/lib/jquery-1.12.4.min.js"></script>
+  <script src="js/bootstrap/js/bootstrap.min.js"></script>
   <script>
     $("#btnLogin").click(function () {
       var userName = $("#userName").val();
       var password = $("#password").val();
       // console.log(userName, password)
-      if (userName === "" || password === ""){
-        alert('用户名不能为空')
+      if (userName === "" || password === "") {
+        $("#pResult").html("用户名密码为空了。。。");
+        // alert('用户名不能为空') 
+        $('#myModal').modal('show')
         return;
-      }else{
-        $.post('http://localhost:8000/admin/login',{user_name:userName,password:password},function(res){
+      } else {
+        $.post('http://localhost:8000/admin/login', { user_name: userName, password: password }, function (res) {
           console.log(res)
-          if(res.code==200){
-            alert('登陆成功')
-          }else{
-            alert('登录用户名或密码错误')
+          if (res.code == 200) {
+            window.location.href='./index.html';
+          } else {
+            $('#myModal').modal('show')
+            $("#pResult").html(res.msg);
           }
         })
       }
