@@ -7,4 +7,5 @@ var URLIST = {
   cotegory_show: BASE_URL + '/admin/category_search',
   cotegory_add: BASE_URL + '/admin/category_add',
   cotegory_del: BASE_URL + '/admin/category_delete',
+  cotegory_edit: BASE_URL + '/admin/category_edit',
 };

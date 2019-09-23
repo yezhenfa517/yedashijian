@@ -21,4 +21,9 @@ var category = {
             callBack(res)
         })
     },
+    edit: function (id, name, slug, callBack) {
+        $.post(URLIST.cotegory_edit, { id: id, name: name, slug: slug }, function (res) {
+            callBack(res)
+        })
+    },
 }
