@@ -4,5 +4,7 @@ var URLIST = {
   user_logout: BASE_URL + '/admin/logout',
   user_info: BASE_URL + '/admin/getuser',
 
-  cotegory_show: BASE_URL + '/admin/category_search'
+  cotegory_show: BASE_URL + '/admin/category_search',
+  cotegory_add: BASE_URL + '/admin/category_add',
+  cotegory_del: BASE_URL + '/admin/category_delete',
 };
