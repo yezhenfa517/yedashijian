@@ -175,7 +175,7 @@
     // 登录人信息
     $(function () {
       user.getInfo(function (res) {
-        console.log(res)
+        // console.log(res)
         $('#userName').html(res.data.nickname)
         $('#userImg').attr('src', res.data.user_pic)
       })
