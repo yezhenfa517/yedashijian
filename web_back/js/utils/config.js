@@ -8,4 +8,7 @@ var URLIST = {
   cotegory_add: BASE_URL + '/admin/category_add',
   cotegory_del: BASE_URL + '/admin/category_delete',
   cotegory_edit: BASE_URL + '/admin/category_edit',
+
+  
+  article_show: BASE_URL + '/admin/search',
 };
