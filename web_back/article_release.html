@@ -23,23 +23,23 @@
             写文章
         </div>
         <div class="container-fluid common_con">
-            <form class="form-horizontal article_form">
+            <form class="form-horizontal article_form" id="myform">
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章标题：</label>
                     <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputEmail3" placeholder="文章标题">
+                        <input type="email" name="title" class="form-control" id="inputEmail3" placeholder="文章标题">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-2 control-label">文章封面：</label>
+                    <label for="fileCover" class="col-sm-2 control-label">文章封面：</label>
                     <div class="col-sm-10">
-                        <input type="file" id="exampleInputFile">
+                        <input type="file" name="cover" id="fileCover">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章类别：</label>
                     <div class="col-sm-4">
-                        <select class="form-control" id="categoryContainer">
+                        <select class="form-control" name="type" id="categoryContainer">
                             <!-- <option>1</option>
                             <option>2</option>
                             <option>3</option>
@@ -51,13 +51,13 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">发布时间：</label>
                     <div class="col-sm-4">
-
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="YYYY-MM-DD" id="dateinput">
+                            <input type="text" name="date" class="form-control" placeholder="YYYY-MM-DD"
+                                id="dateinput" />
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button"
-                                    onclick="jeDate('#dateinput',{trigger:false,ormat:'YYYY-MM-DD'})"><i
-                                        class="iconfonticon-icondate"></i><button>
+                                    onclick="jeDate('#dateinput',{trigger:false,format: 'YYYY-MM-DD'})"><i
+                                        class="iconfont icon-icondate"></i></button>
                             </span>
                         </div>
                     </div>
@@ -70,10 +70,13 @@
                             </textarea>
                     </div>
                 </div>
+                <div id="divResult" class="alert alert-danger" role="alert">
+
+                </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-success">发布</button>
-                        <button type="submit" class="btn btn-default">存为草稿</button>
+                        <button id="btnAdd" type="button" class="btn btn-success">发布</button>
+                        <button id="btnadd" type="submit" class="btn btn-default">存为草稿</button>
                     </div>
                 </div>
             </form>
@@ -82,6 +85,7 @@
     <script src="./js/utils/config.js"></script>
     <script src="./js/utils/category.js"></script>
     <script src="./js/lib/template-web.js"></script>
+    <script src="./js/utils/article.js"></script>
     <script id="tmp" type="text/html">
         {{each data item}}
         <option  value="{{item.id}}">{{item.name}}</option>
@@ -96,6 +100,46 @@
                 }
                 console.log(res)
             });
+
+
+            $("#divResult").hide().text('');
+
+
+            $("#btnAdd").click(function () {
+                $("#divResult").hide().text('');
+                var fd = new FormData($("#myform")[0])
+                fd.append("state", '已发布');
+                // 获取富文本框内容需要使用的工具tinyMCE.activeEditor.getContent()
+                fd.set('content', tinyMCE.activeEditor.getContent());
+                article.add(fd, function (res) {
+                    console.log(res)
+                    if (res.code == 201) {
+                        $("#divResult").hide().text('');
+                        $("#inputEmail3").val('')
+                        $("#fileCover").val('')
+                        $("#dateinput").val('')
+                        window.location.href = './article_list.html';
+                    } else {
+                        $("#divResult").show().text(res.msg);
+
+                    }
+                })
+            })
+
+            $("#btnadd").click(function () {
+                var fd = new FormData($("#myform")[0])
+                fd.append("state", '草稿')
+                $.ajax({
+                    url: 'http://localhost:8000/admin/article_publish',
+                    type: 'post',
+                    data: fd,
+                    processData: false,//不然jquery处理formDate对象，不无法处理
+                    contentType: false,//请求头为空，他有自己的请求头
+                    success: function (res) {
+                        console.log(res)
+                    }
+                })
+            })
         });
     </script>
 

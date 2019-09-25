@@ -291,7 +291,7 @@
             <td class="text-center">{{item.state}}</td>
             <td class="text-center">
                 <a href="post-edit.html?id=1000" class="btn btn-default btn-xs">编辑</a>
-                <a href="javascript:deleteTr( 1000 );" class="btn btn-danger btn-xs">删除</a>
+                <a data-id="{{item.id}}" href="javascript:;" class="btn btn-danger btn-xs del">删除</a>
             </td>
         </tr>
         {{/each}}
@@ -308,6 +308,21 @@
             // 开始就加载
             getAndShow();
 
+            // 删除
+            $("#tableCentent").on('click', '.del', function (res) {
+                var id = $(this).attr('data-id');
+                console.log(id)
+                if (window.confirm('确认删除吗？')) {
+                    article.del({ id: id }, function (res) {
+                        if (res.code == 200) {
+                            alert('删除成功')
+                            getAndShow();
+                        }
+                    })
+                }
+            })
+
+
 
             // 筛选
             // 设置初始值
@@ -315,6 +330,7 @@
             var type = "";
             var state = "";
             var totalPage = "";
+            // 筛选
             $("#btnSearch").click(function () {
                 type = $("#selCategory").val();
                 state = $("#selStatus").val();
@@ -324,19 +340,19 @@
                 getAndShow();
 
             })
-
+            // 加载所有分类
             category.show(function (res) {
-                console.log(res)
+                // console.log(res)
                 $("#selCategory").html(template("tme", res))
             })
 
             // 封装加载
             function getAndShow() {
                 article.show({ type: type, state: state, page: currentPage }, function (res) {
-                    console.log(res)
+                    // console.log(res)
                     if (res.code == 200) {
                         $('#tableCentent').html(template("tmp", res))
-                        console.log(res.totalPage)
+                        // console.log(res.totalPage)
 
                         // 两次不一样则销毁重建
                         if (totalPage != res.totalPage) {
@@ -367,10 +383,7 @@
                     }
                 })
             }
-
         })
-
-
     </script>
 </body>
 
