@@ -64,7 +64,10 @@
                     </div>
                 </div>
                 <div class="form-group">
+
                     <div class="col-sm-offset-2 col-sm-10">
+                        <div class="alert alert-danger" role="alert" id="divReuslt">
+                        </div>
                         <button type="button" class="btn btn-success" id="btnSave">修改</button>
                     </div>
                 </div>
@@ -84,13 +87,13 @@
         $(function () {
             var id = window.location.search.split('=')[1];
             console.log(id)
-
+            $('#divReuslt').hide();
             // 更改信息
             $("#btnSave").click(function () {
                 // 获取信息
                 var dataa = $("#dateinput").val();
                 console.log(dataa);
-                
+
                 var fd = new FormData($("#myfoem")[0]);
 
 
@@ -98,9 +101,14 @@
                 fd.set('content', tinyMCE.activeEditor.getContent());
                 article.edit(fd, function (res) {
                     console.log(res);
-                    
+
                     if (res.code == 200) {
                         alert('修改成功')
+                        window.location.href = 'article_list.html';
+                        $('#divReuslt').hide();
+                    } else {
+                        $('#divReuslt').html(res.msg)
+                        $('#divReuslt').show();
                     }
                 })
             })
