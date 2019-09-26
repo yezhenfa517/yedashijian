@@ -1,5 +1,6 @@
 var BASE_URL = 'http://localhost:8000';
 var URLIST = {
+  //文章类别查询
   user_login: BASE_URL + '/admin/login',
   user_logout: BASE_URL + '/admin/logout',
   user_info: BASE_URL + '/admin/getuser',
@@ -13,4 +14,5 @@ var URLIST = {
   article_show: BASE_URL + '/admin/search',
   article_del: BASE_URL + '/admin/article_delete',
   article_add: BASE_URL + '/admin/article_publish',
+  article_edit: BASE_URL + '/admin/article_edit',
 };

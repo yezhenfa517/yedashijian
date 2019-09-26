@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/main.css">
     <link type="text/css" rel="stylesheet" href="js/jedate/css/jedate.css">
-    <script src="js/jquery-1.12.4.min.js"></script>
+    <script src="js/lib/jquery-1.12.4.min.js"></script>
     <script src="js/jedate/js/jedate.js"></script>
     <script src="js/tinymce/js/tinymce/tinymce.min.js"></script>
     <script src="js/tinymce/js/tinymce_setup.js"></script>
@@ -23,38 +23,31 @@
             文章编辑
         </div>
         <div class="container-fluid common_con">
-            <form class="form-horizontal article_form">
+            <form class="form-horizontal article_form" id="myfoem">
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章标题：</label>
                     <div class="col-sm-10">
-                        <input type="email" class="form-control" id="inputEmail3" value="文章标题文字">
+                        <input type="email" name="title" class="form-control" id="title" value="文章标题文字">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">文章封面：</label>
                     <div class="col-sm-10">
-                        <img src="images/pic06.jpg" class="article_cover">
-                        <input type="file" id="exampleInputFile">
+                        <img id="cover" src="images/pic06.jpg" class="article_cover">
+                        <input type="file" name="cover" id="exampleInputFile">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章类别：</label>
                     <div class="col-sm-4">
-                        <select class="form-control">
-                            <option>类别一</option>
-                            <option>类别二</option>
-                            <option>类别三</option>
-                            <option selected>类别四</option>
-                            <option>类别五</option>
-                        </select>
+                        <select name="type" class="form-control" id="selCategory"></select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">发布时间：</label>
                     <div class="col-sm-4">
-
                         <div class="input-group">
-                            <input type="text" class="form-control" value="2019-05-17" id="dateinput">
+                            <input type="text" name="date" value="" class="form-control" id="dateinput" />
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button"
                                     onclick="jeDate('#dateinput',{trigger:false,format: 'YYYY-MM-DD'})"><i
@@ -66,18 +59,77 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章内容：</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="rich_content" name="content" placeholder="文章内容" value="文章内容">
+                        <input type="text" name="content" class="form-control" id="rich_content" name="content"
+                            placeholder="文章内容" value="文章内容">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-success">修改</button>
+                        <button type="button" class="btn btn-success" id="btnSave">修改</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+    <script src="./js/utils/article.js"></script>
+    <script src="./js/utils/config.js"></script>
+    <script src="./js/lib/template-web.js"></script>
+    <script src="./js/utils/category.js"></script>
+    <script id="tmp" type="text/html">
+    {{each data item}}
+        <option value="{{item.id}}">{{item.name}}</option>
+    {{/each}}
+    </script>
+    <script>
+        $(function () {
+            var id = window.location.search.split('=')[1];
+            console.log(id)
 
+            // 更改信息
+            $("#btnSave").click(function () {
+                // 获取信息
+                var dataa = $("#dateinput").val();
+                console.log(dataa);
+                
+                var fd = new FormData($("#myfoem")[0]);
+
+
+                fd.append('id', id);
+                fd.set('content', tinyMCE.activeEditor.getContent());
+                article.edit(fd, function (res) {
+                    console.log(res);
+                    
+                    if (res.code == 200) {
+                        alert('修改成功')
+                    }
+                })
+            })
+            // 获取信息
+            article.show({ id: id }, function (res) {
+                console.log(res);
+                var type = res.data.type;
+                category.show(function (res) {
+                    $("#selCategory").html(template("tmp", res))
+                    $("#selCategory").val(type)
+                })
+                $("#title").val(res.data.title)
+                $("#dateinput").val(res.data.date)
+
+
+                $("#cover").attr('src', res.data.cover)
+                // 这个可能会发生错误  显示不出来则使用下面代码
+                $("#rich_content").val(res.data.content)
+                // 这个也错误则是还没有准备就绪，需要设置延迟
+                // tinymce.activeEditor.setContent(res.data.content);
+                // 延迟后的代码
+                // setTimeout(function() {
+                //   // 如果不设置延迟，可能会报错。报错的原因是tinyMCE还没有准备就绪，就给它设置了内容
+                //   tinyMCE.activeEditor.setContent(res.data.content);
+                // }, 1000);
+            })
+
+        })
+    </script>
 </body>
 
 </html>
